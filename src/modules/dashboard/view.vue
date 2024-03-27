@@ -1,6 +1,6 @@
 <template>
   <div class="mt-[25px]">
-    <BannerComponent />
+    <!-- <BannerComponent /> -->
     <div class="col-span-12">
       <!-- Wallet -->
       <Transition :name="animate">
