@@ -421,6 +421,7 @@ const filteredAssets = computed(() => {
     return true;
   });
   const balances = state.value.showSmallBalances ? b : filterSmallBalances(b as AssetBalance[]);
+
   return balances.sort((a, b) => {
     const aInfo = wallet.getCurrencyInfo(a.balance.denom);
     const aAssetBalance = CurrencyUtils.calculateBalance(
@@ -536,8 +537,8 @@ async function loadSuppliedAndStaked() {
     for (const protocolKey in admin.contracts) {
       const fn = async () => {
         const lppClient = new Lpp(cosmWasmClient, admin.contracts![protocolKey].lpp);
-        const lppConfig = await lppClient.getLppConfig();
-        const lpnCoin = app.getCurrencySymbol(lppConfig.lpn_ticker, protocolKey);
+        const lpn_ticker = await lppClient.getLPN();
+        const lpnCoin = app.getCurrencySymbol(lpn_ticker, protocolKey);
         const walletAddress = wallet.wallet?.address ?? WalletManager.getWalletAddress();
 
         const [depositBalance, price] = await Promise.all([

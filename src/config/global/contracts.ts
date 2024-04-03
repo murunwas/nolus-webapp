@@ -33,19 +33,28 @@ export const ProtocolsConfig: {
   [key: string]: {
     hidden: string[];
     only: string[];
+    ignoreNetowrk: string[];
   };
 } = {
   "OSMOSIS-OSMOSIS-USDC-1": {
     only: ["NLS", "ATOM", "ST_ATOM", "TIA"],
-    hidden: []
+    hidden: [],
+    ignoreNetowrk: ["NEUTORN"]
   },
   "OSMOSIS-OSMOSIS-USDC_AXELAR": {
     only: ["NLS", "ATOM", "ST_ATOM", "TIA"],
-    hidden: []
+    hidden: [],
+    ignoreNetowrk: ["NEUTRON"]
+  },
+  "OSMOSIS-OSMOSIS-USDC_NOBLE": {
+    only: [],
+    hidden: [],
+    ignoreNetowrk: ["NEUTRON"]
   },
   "NEUTRON-ASTROPORT-USDC_AXELAR": {
     only: [],
-    hidden: ["ATOM", "ST_ATOM", "TIA"]
+    hidden: ["ATOM", "ST_ATOM", "TIA"],
+    ignoreNetowrk: ["OSMOSIS"]
   }
 };
 

@@ -149,7 +149,7 @@ import { AssetUtils as NolusAssetUtils } from "@nolus/nolusjs/build/utils/AssetU
 import { Networks } from "@nolus/nolusjs/build/types/Networks";
 import { AppUtils } from "@/common/utils";
 
-import { ErrorCodes, IGNORE_TRANSFER_ASSETS, LPN_NETWORK, NATIVE_NETWORK } from "@/config/global";
+import { ErrorCodes, IGNORE_TRANSFER_ASSETS, LPN_NETWORK, NATIVE_NETWORK, ProtocolsConfig } from "@/config/global";
 import { CurrencyDemapping, CurrencyMapping, SOURCE_PORTS } from "@/config/currencies";
 
 export interface ReceiveComponentProps {
@@ -195,12 +195,11 @@ const networks = computed(() => {
       }
     } else {
       for (const key in app.networks ?? {}) {
-        if (app.networks?.[key][ckey]) {
+        if (app.networks?.[key][ckey] && !ProtocolsConfig[protocol].ignoreNetowrk.includes(key)) {
           n.push(key);
         }
       }
     }
-
     return NETWORKS_DATA[EnvNetworkUtils.getStoredNetworkName()].list.filter((item) => n.includes(item.key));
   }
   return NETWORKS_DATA[EnvNetworkUtils.getStoredNetworkName()].list;
@@ -362,6 +361,10 @@ async function onUpdateNetwork(event: Network) {
           }
         }
 
+        if (ProtocolsConfig[protocol].hidden.includes(key)) {
+          return;
+        }
+
         const icon = app.assetIcons?.[`${ticker}@${protocol}`] as string;
 
         return {
@@ -379,15 +382,15 @@ async function onUpdateNetwork(event: Network) {
       currenciesPromise.push(fn());
     }
 
-    const items = await Promise.all(currenciesPromise);
+    const items = (await Promise.all(currenciesPromise)).filter((item) => item != null);
     if ((props.modelValue?.dialogSelectedCurrency.length as number) > 0) {
       const [ckey]: string[] = props.modelValue!.dialogSelectedCurrency.split("@");
-      const c = items.find((e) => e.ticker == ckey || e.ticker == props.modelValue!.dialogSelectedCurrency)!;
+      const c = items.find((e) => e!.ticker == ckey || e!.ticker == props.modelValue!.dialogSelectedCurrency)!;
       selectedCurrency.value = c;
     } else {
-      selectedCurrency.value = items?.[0];
+      selectedCurrency.value = items?.[0]!;
     }
-    networkCurrencies.value = items;
+    networkCurrencies.value = items as any;
     disablePicker.value = false;
   } else {
     selectedCurrency.value = walletStore.balances[0];

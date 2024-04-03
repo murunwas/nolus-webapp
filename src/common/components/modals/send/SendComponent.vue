@@ -85,7 +85,7 @@ import { EnvNetworkUtils, WalletUtils } from "@/common/utils";
 import { computed, ref, onMounted } from "vue";
 import { NETWORKS_DATA } from "@/networks";
 import { useApplicationStore } from "@/common/stores/application";
-import { LPN_NETWORK, NATIVE_NETWORK } from "@/config/global";
+import { LPN_NETWORK, NATIVE_NETWORK, ProtocolsConfig } from "@/config/global";
 import { AppUtils } from "@/common/utils";
 
 const props = defineProps({
@@ -122,7 +122,7 @@ const networks = computed(() => {
       }
     } else {
       for (const key in app.networks ?? {}) {
-        if (app.networks?.[key][ckey]) {
+        if (app.networks?.[key][ckey] && !ProtocolsConfig[protocol].ignoreNetowrk.includes(key)) {
           n.push(key);
         }
       }

@@ -34,7 +34,9 @@ export async function loadCurrennncies(this: Store) {
 
     for (const protocol of this.protocols) {
       const lpn = NolusAssetUtils.getLpn(currenciesData, protocol);
-      this.lpn.push(data.networks[NATIVE_NETWORK.key][`${lpn}@${protocol}`]);
+      if (data.networks[NATIVE_NETWORK.key][`${lpn}@${protocol}`]) {
+        this.lpn.push(data.networks[NATIVE_NETWORK.key][`${lpn}@${protocol}`]);
+      }
     }
 
     this.currenciesData = data.networks[NATIVE_NETWORK.key];
